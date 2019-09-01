@@ -9,7 +9,6 @@ $(function () {
         alternarColor ? $(".main-titulo").css('color', 'white') : $(".main-titulo").css('color', 'yellow');
         alternarColor = !alternarColor;
     }, 1000);
-
     $('.col-1').droppable({
         accept: ".col-2"
     });
@@ -49,9 +48,7 @@ $(function () {
                 $(".time").css('height', '23%');
                 $(".time").css('opacity', '1.0');
             }
-
             $('.main-titulo-juego-terminado').css("display", "none");
-
             removerElementos();
             rellenarTablero();
             puntaje = 0;
@@ -92,88 +89,69 @@ function rellenarTablero() {
 
 function iniciarJuego() {
     continuar = true;
-
     droppableDraggable();
-
     $('#countdowntimer').countdowntimer({
         minutes: 2,
         seconds: 0,
         timeUp: function () {
             continuar = false;
             clearInterval(realizarMovimientos());
-
             var anchoPanelTablero = $('.panel-tablero').css('width');
-
             $(".panel-tablero").animate({
                 height: "0",
                 width: "0"
             }, 4100, function () {
                 $(".panel-tablero").css('display', 'none');
             });
-
             $('.panel-score').animate({
                 width: anchoPanelTablero
             }, 3000);
-
             $('.time').animate({
                 opacity: 0.0
             }, 2000);
-
             $('.btn-reinicio').text('Iniciar');
-
             $('.main-titulo-juego-terminado').css("display", "block")
         }
     });
-
     idRealizarMovimientosInterval = setInterval(realizarMovimientos, 1500);
 }
 
 function actualiarNumeroMovimientos() {
     movimientos += 1;
-
     $('#movimientos-text').text(movimientos);
 }
 
 function intercambiarElementos(elm1, elm2) {
     var parent1, next1,
         parent2, next2;
-
     parent1 = elm1.parentNode;
     next1 = elm1.nextSibling;
     parent2 = elm2.parentNode;
     next2 = elm2.nextSibling;
-
     parent1.insertBefore(elm2, next1);
     parent2.insertBefore(elm1, next2);
 }
 
 function realizarMovimientos() {
-
     var contador;
     var nombreImagen;
     var nombreImagenSgte;
     var figurasMarcadas = inicializarFigurasMarcadas();
     var huboCambios = false;
-
     for (var row = 0; row < 7; ++row) {
         for (var col = 0; col < 7; ++col) {
             if ((7 - col) > 2) {
                 nombreImagen = $('.col-' + (col + 1)).children()[row];
                 nombreImagen = $(nombreImagen).prop('src').substring($(nombreImagen).prop('src').length - 5);
-
                 contador = 1;
-
                 while ((7 - col) >= 3 && contador < (7 - col)) {
                     nombreImagenSgte = $('.col-' + (col + contador + 1)).children()[row];
                     nombreImagenSgte = $(nombreImagenSgte).prop('src').substring($(nombreImagenSgte).prop('src').length - 5);
-
                     if (nombreImagen !== nombreImagenSgte) {
                         break;
                     }
-
                     ++contador;
                 }
-
                 if (contador >= 3) {
                     huboCambios = true;
                     for (var i = 0; i < contador; ++i) {
@@ -181,24 +159,18 @@ function realizarMovimientos() {
                     }
                 }
             }
-
             if ((7 - row) > 2) {
                 nombreImagen = $('.col-' + (col + 1)).children()[row];
                 nombreImagen = $(nombreImagen).prop('src').substring($(nombreImagen).prop('src').length - 5);
-
                 contador = 1;
-
                 while ((7 - row) >= 3 && contador < (7 - row)) {
                     nombreImagenSgte = $('.col-' + (col + 1)).children()[row + contador];
                     nombreImagenSgte = $(nombreImagenSgte).prop('src').substring($(nombreImagenSgte).prop('src').length - 5);
-
                     if (nombreImagen !== nombreImagenSgte) {
                         break;
                     }
-
                     ++contador;
                 }
-
                 if (contador >= 3) {
                     huboCambios = true;
                     for (var i = 0; i < contador; ++i) {
@@ -208,14 +180,12 @@ function realizarMovimientos() {
             }
         }
     }
-
     if (huboCambios) {
         actualizarTablero(figurasMarcadas);
     } else {
         clearInterval(idRealizarMovimientosInterval);
     }
 }
-
 
 function inicializarFigurasMarcadas() {
     var figurasMarcadas = [];
@@ -226,7 +196,6 @@ function inicializarFigurasMarcadas() {
             figurasMarcadas[row][col] = false;
         }
     }
-
     return figurasMarcadas;
 }
 
@@ -240,7 +209,6 @@ function actualizarTablero(figurasMarcadas) {
             }
         }
     }
-
     if ($('.remover').length > 0) {
         $('.remover').fadeIn(400).fadeOut(400).fadeIn(400).fadeOut(300, function () {
             $(this).remove();
@@ -255,7 +223,6 @@ function crearDulces() {
     for (var col = 0; col < 7; ++col) {
         if ($('.col-' + (col + 1)).children().length < 7) {
             var numeroDulces = 7 - $('.col-' + (col + 1)).children().length;
-
             for (var i = 1; i <= numeroDulces; ++i) {
                 var nuevoDulce = $('<img>',
                     {"src": "image/" + (1 + Math.floor(Math.random() * 4)) + ".png", "class": "elemento"});
@@ -269,7 +236,6 @@ function crearDulces() {
 
 function actualizarPuntaje(masPuntaje) {
     puntaje += masPuntaje;
-
     $('#score-text').text(puntaje);
 }
 
@@ -284,7 +250,6 @@ function droppableDraggable() {
         snapMode: "inner",
         snapTolerance: 40,
         stop: function (event, ui) {
-
             actualiarNumeroMovimientos();
         }
     });
@@ -293,10 +258,8 @@ function droppableDraggable() {
             if (idRealizarMovimientosInterval !== 0) {
                 var dropped = ui.draggable;
                 var droppedOn = this;
-
                 var colDropped = Number($($(dropped).parent()).attr("class").substring(4, 5));
                 var colDroppedOn = Number($($(droppedOn).parent()).attr("class").substring(4, 5));
-
                 if ((Math.abs(colDropped - colDroppedOn) === 1) || colDroppedOn === colDropped) {
                     intercambiarElementos(dropped[0], droppedOn);
                     idRealizarMovimientosInterval = setInterval(realizarMovimientos, 1500);
