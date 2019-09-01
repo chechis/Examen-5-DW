@@ -25,6 +25,12 @@ body{
   color: #DCFF0E;
   width: 100%;
 }
+.main-titulo-juego-terminado{
+  font-family: gameFont;
+  font-size: 3em;
+  color: #DCFF0E;
+  width: 100%;
+}
 
 .panel-tablero{
   width: 70%;
